@@ -48,7 +48,7 @@ ig-dm-automation/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/ig-dm-automation.git
+git clone https://github.com/py-crypto/ig-dm-automation.git
 cd ig-dm-automation
 ```
 
