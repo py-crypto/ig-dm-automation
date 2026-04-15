@@ -22,7 +22,7 @@ A lightweight **UI automation tool** to send Instagram DMs using **Playwright + 
 
 ```text
 First Run:
-  Opens browser → You login → Session saved → Program exits
+  Opens browser → You login → Click "Not Now" on popups → Session saved → Continue to messaging
 
 Next Runs:
   Uses saved session → Runs headless → Sends messages automatically
@@ -58,13 +58,16 @@ cd ig-dm-automation
 
 ```bash
 pip install -r requirements.txt
-
 ```
+
 ```bash
 playwright install chromium
 ```
-Downloading might take 5-10 minutes
+
+> ⏳ First-time browser download may take **5–10 minutes**
+
 ---
+
 ## ▶️ Usage
 
 ### 🔹 First Run (Login Required)
@@ -73,10 +76,19 @@ Downloading might take 5-10 minutes
 python main.py
 ```
 
-* Browser opens
-* Login manually to Instagram
-* Session is saved in `ig_state.json`
-* Program exits automatically
+### Steps:
+
+1. Browser opens
+2. Login manually to Instagram
+3. When prompted:
+
+   * Click **"Not Now"** on:
+
+     * Save Login Info popup
+     * Turn on Notifications popup
+4. Wait ~5 seconds
+5. Session is saved in `ig_state.json`
+6. Program continues to messaging
 
 ---
 
@@ -109,6 +121,7 @@ How many times to send: 3
 ## ⚡ Behavior
 
 * Searches user by **name**
+* Selects first matching result
 * Opens chat
 * Sends message
 * Repeats with **random delay (1.2–2.5s)**
@@ -117,10 +130,11 @@ How many times to send: 3
 
 ## ⚠️ Important Notes
 
+* Always click **"Not Now"** after login to ensure session stability
 * Name search picks the **first match**
 * Works best with **unique names/usernames**
 * If session expires → delete `ig_state.json` and login again
-* UI automation depends on Instagram layout (may break if UI changes)
+* UI automation depends on Instagram layout (may break if UI updates)
 
 ---
 
@@ -137,6 +151,7 @@ How many times to send: 3
 * ❌ Not using official Instagram API
 * ❌ No guarantee against rate limits
 * ❌ UI changes can break selectors
+* ❌ First-match selection may pick wrong user
 
 ---
 
