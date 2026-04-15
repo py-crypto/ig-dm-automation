@@ -104,18 +104,19 @@ async def main():
     # Check if state file exists and is valid
     if not os.path.exists(STATE_FILE) or os.path.getsize(STATE_FILE) == 0:
         await login_and_save()
-        return
+        print("🔄 Proceeding to messaging...")
 
-    print("✅ Found existing login session")
+    else:
+        print("✅ Found existing login session")
 
-    # Take user input (no delay input anymore)
+    # 👉 Always run this after login (first or later)
     name = input("Enter Instagram Name: ").strip()
     message = input("Enter Message: ").strip()
+
     count_input = input("How many times to send (default 1): ").strip()
     count = int(count_input) if count_input else 1
 
     await send_messages(name, message, count)
-
 
 # ---------------------------
 # ▶️ RUN
