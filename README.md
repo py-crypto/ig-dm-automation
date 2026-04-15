@@ -58,11 +58,14 @@ cd ig-dm-automation
 
 ```bash
 pip install -r requirements.txt
+
+```
+```bash
 playwright install chromium
 ```
-
 ---
-
+Downloading might take 5-10 minutes
+---
 ## ▶️ Usage
 
 ### 🔹 First Run (Login Required)
