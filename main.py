@@ -109,14 +109,37 @@ async def main():
     else:
         print("✅ Found existing login session")
 
-    # 👉 Always run this after login (first or later)
-    name = input("Enter Instagram Name: ").strip()
-    message = input("Enter Message: ").strip()
+    def check_to_quit(field: str) -> bool:
+        if field.lower() == "q":
+            print("👋 Exiting...")
+            return True
+        return False
 
-    count_input = input("How many times to send (default 1): ").strip()
-    count = int(count_input) if count_input else 1
+    while True:
+        print("\n--- New Message Batch ---")
+        print("👉 Please provide the following details:")
+        print("Enter q and press enter to quit at any time.\n")
 
-    await send_messages(name, message, count)
+        name = input("Enter Instagram Name: ").strip()
+        if check_to_quit(name):
+            break
+
+        message = input("Enter Message: ").strip()
+        if check_to_quit(message):
+            break
+
+        count_input = input("How many times to send (default 1): ").strip()
+        if check_to_quit(count_input):
+            break
+
+        # Safe parsing
+        try:
+            count = int(count_input) if count_input else 1
+        except ValueError:
+            print("⚠️ Invalid number. Defaulting to 1.")
+            count = 1
+
+        await send_messages(name, message, count)
 
 # ---------------------------
 # ▶️ RUN
