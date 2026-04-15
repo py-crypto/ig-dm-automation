@@ -63,7 +63,6 @@ pip install -r requirements.txt
 ```bash
 playwright install chromium
 ```
----
 Downloading might take 5-10 minutes
 ---
 ## ▶️ Usage
