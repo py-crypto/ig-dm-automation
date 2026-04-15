@@ -38,35 +38,57 @@ async def login_and_save():
 # ---------------------------
 # 📩 SEND MESSAGE FUNCTION
 # ---------------------------
-async def send_messages(thread_id, message, count):
+async def send_messages(name, message, count):
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
-
         context = await browser.new_context(storage_state=STATE_FILE)
         page = await context.new_page()
 
-        await page.goto(f"https://www.instagram.com/direct/t/{thread_id}/")
+        # 🔥 STEP 1: Open inbox
+        await page.goto("https://www.instagram.com/direct/inbox/")
 
-        # Wait for chat UI
+        # 🔥 STEP 2: Click "New message"
+        chat_btn = page.locator("div[role='button']:has-text('Send message')").first
+        await chat_btn.wait_for(timeout=10000)
+        await chat_btn.click()
+
+        # 🔥 STEP 3: Wait for popup dialog
+        dialog = page.locator("div[role='dialog']")
+        await dialog.wait_for(timeout=15000)
+
+        # 🔥 STEP 4: Search by name
+        search_box = dialog.locator("input, div[role='textbox']").first
+        await search_box.click()
+        await search_box.fill(name)
+
+        await page.wait_for_timeout(2000)  # let results load
+
+        # 🔥 STEP 5: Select person
+        user_option = dialog.locator(f"text={name}").first
+        await user_option.wait_for(timeout=10000)
+        await user_option.click()
+
+        # 🔥 STEP 6: Click "Chat"
+        chat_btn = page.get_by_role("button", name="Chat")
+        await chat_btn.wait_for(timeout=10000)
+        await chat_btn.click()
+
+        # 🔥 STEP 7: Wait for message box
         input_box = page.locator("textarea, div[role='textbox']")
         await input_box.first.wait_for(timeout=15000)
 
+        # 🔁 SEND LOOP
         for i in range(count):
             print(f"📤 Sending message {i+1}/{count}")
 
             await input_box.first.click()
 
-            # 🔥 small human pause before typing
             await asyncio.sleep(random.uniform(0.3, 0.8))
 
-            # 🔥 human-like typing
             await page.keyboard.type(message, delay=random.randint(20, 60))
-
             await page.keyboard.press("Enter")
 
-            # 🔥 fixed internal random delay (FAST)
             delay = random.uniform(1.2, 2.5)
-
             print(f"⏳ Waiting {delay:.2f}s")
             await asyncio.sleep(delay)
 
@@ -87,11 +109,12 @@ async def main():
     print("✅ Found existing login session")
 
     # Take user input (no delay input anymore)
-    thread_id = input("Enter Thread ID: ").strip()
+    name = input("Enter Instagram Name: ").strip()
     message = input("Enter Message: ").strip()
-    count = int(input("How many times to send: "))
+    count_input = input("How many times to send (default 1): ").strip()
+    count = int(count_input) if count_input else 1
 
-    await send_messages(thread_id, message, count)
+    await send_messages(name, message, count)
 
 
 # ---------------------------
